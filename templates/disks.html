@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scegli un disco</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .container {
+    text-align: center;
+  }
+  .title {
+    font-size: 4rem;
+    margin-bottom: 60px;
+  }
+  table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ffffff;
+    font-size: 1.5rem;
+  }
+  th {
+    text-transform: uppercase;
+  }
+
+
+  .button {
+            padding: 5px 10px;
+            font-size: 1.5rem;
+            border: 2px solid transparent;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #1a1a1a;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">Scegli un disco</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Size</th>
+        <th>Monta</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for disk in disks %}
+        <tr>
+          <td>{{ disk.name }}</td>
+          <td>{{ disk.size }} GB</td>
+          <td><button class="button" onclick="sendData('{{ disk.id }}')">Monta</button></td>    
+         </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+    function sendData(name) {
+        var url = 'mount?name=' + encodeURIComponent(name);
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert('Disco montato correttamente');
+      window.location.href = '/';
+    })
+    .catch(error => {
+        alert('Errore nel montaggio del disco');
+    });
+  }
+    
+  </script>
+</body>
+</html>
